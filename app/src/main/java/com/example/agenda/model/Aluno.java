@@ -15,7 +15,7 @@ public class Aluno {
 
     @NonNull
     @Override
-    public String toString(){
+    public String toString() {
         return nome;
     }
 
