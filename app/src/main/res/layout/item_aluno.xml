@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     
@@ -9,12 +10,13 @@
         android:id="@+id/item_aluno_nome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Teste Nome"
-        android:textSize="24sp"/>
+        android:text="@string/teste_nome"
+        android:textSize="24sp"
+        android:layout_marginStart="8dp" />
 
     <TextView
         android:layout_marginStart="8dp"
-        android:text="Teste Telelfone"
+        android:text="@string/teste_telelfone"
         android:id="@+id/item_aluno_telefone"
         android:textSize="18sp"
         android:layout_width="match_parent"

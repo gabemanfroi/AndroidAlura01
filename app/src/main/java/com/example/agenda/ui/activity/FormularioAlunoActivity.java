@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import com.example.agenda.model.Aluno;
 
 import static com.example.agenda.ui.activity.ConstanteActivities.CHAVE_ALUNO;
 
+@SuppressWarnings("ALL")
 public class FormularioAlunoActivity extends AppCompatActivity {
 
     private static final String TITULO_APPBAR_NOVO_ALUNO = "Novo aluno";
@@ -84,6 +84,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         campoEmail = findViewById(R.id.activity_formulario_aluno_email);
     }
 
+    @SuppressWarnings("unused")
     private void salva(Aluno aluno) {
         alunoDao.salva(aluno);
 

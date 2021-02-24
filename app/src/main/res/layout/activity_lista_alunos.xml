@@ -20,6 +20,9 @@
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:srcCompat="@drawable/ic_action_novo_aluno" />
+        app:srcCompat="@drawable/ic_action_novo_aluno"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/fabDescription"
+        android:focusable="true" />
 
 </RelativeLayout>

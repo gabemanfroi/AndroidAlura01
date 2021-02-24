@@ -3,79 +3,55 @@ package com.example.agenda.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.agenda.R;
-import com.example.agenda.dao.AlunoDao;
 import com.example.agenda.model.Aluno;
-import com.example.agenda.ui.adapter.ListaAlunosAdapter;
+import com.example.agenda.ui.ListaAlunosView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.agenda.ui.activity.ConstanteActivities.CHAVE_ALUNO;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
-
     public static final String TITULO_APPBAR = "Lista de Alunos";
-
-
-    private final AlunoDao alunoDao = new AlunoDao();
-    private ListaAlunosAdapter adapter;
+    private final ListaAlunosView listaAlunosView = new ListaAlunosView(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(TITULO_APPBAR);
         setContentView(R.layout.activity_lista_alunos);
+        setTitle(TITULO_APPBAR);
         configuraBotaoAdicionarAluno();
-        configuraListaDeAlunos(alunoDao);
-        for (int i = 0; i < 20; i++) {
-            alunoDao.salva(new Aluno("Aluno" + i, "123456", "email"));
-        }
+        configuraListaDeAlunos();
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.activity_lista_alunos_menu, menu);
     }
 
     @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
+    public boolean onContextItemSelected(@NonNull final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.activity_lista_alunos_menu_remover) {
-            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno aluno = adapter.getItem(menuInfo.position);
-            remove(aluno);
+            listaAlunosView.confirmaRemocao(item);
         }
         return super.onContextItemSelected(item);
     }
 
-    private void remove(Aluno aluno) {
-        alunoDao.remove(aluno);
-        adapter.remove(aluno);
-
-    }
-
     private void configuraBotaoAdicionarAluno() {
-        FloatingActionButton botaoAdicionaAluno = findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
+        FloatingActionButton botaoAdicionaAluno =
+                findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
 
-        botaoAdicionaAluno.setOnClickListener(v -> {
-            abreFormularioModoAdicao();
-        });
+        botaoAdicionaAluno.setOnClickListener(v -> abreFormularioModoAdicao());
     }
 
     private void abreFormularioModoAdicao() {
@@ -83,31 +59,25 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 , FormularioAlunoActivity.class));
     }
 
-    private void abreFormularioModoEdicao(Aluno aluno) {
-        Intent vaiParaFormularioActivity = new Intent(ListaAlunosActivity.this, FormularioAlunoActivity.class);
-        vaiParaFormularioActivity.putExtra(CHAVE_ALUNO, aluno);
-        startActivity(vaiParaFormularioActivity);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        atualizaAlunos();
+        listaAlunosView.atualizaAlunos();
     }
 
-    private void atualizaAlunos() {
-        adapter.clear();
-        adapter.addAll(alunoDao.todos());
-    }
-
-    private void configuraListaDeAlunos(AlunoDao alunoDao) {
-
-        ListView listaDeAlunos = (ListView) findViewById(R.id.activity_lista_alunos_listview);
-        configuraAdapter(listaDeAlunos);
+    private void configuraListaDeAlunos() {
+        ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
+        listaAlunosView.configuraAdapter(listaDeAlunos);
         configuraListenerOnClick(listaDeAlunos);
         registerForContextMenu(listaDeAlunos);
     }
 
+    private void abreFormularioModoEdicao(Aluno aluno) {
+        Intent vaiParaFormularioActivity = new Intent(ListaAlunosActivity.this,
+                FormularioAlunoActivity.class);
+        vaiParaFormularioActivity.putExtra(CHAVE_ALUNO, aluno);
+        startActivity(vaiParaFormularioActivity);
+    }
 
     private void configuraListenerOnClick(ListView listaDeAlunos) {
         listaDeAlunos.setOnItemClickListener((parent, view, position, id) -> {
@@ -116,8 +86,4 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
     }
 
-    private void configuraAdapter(ListView listaDeAlunos) {
-
-        listaDeAlunos.setAdapter(new ListaAlunosAdapter(this));
-    }
 }
